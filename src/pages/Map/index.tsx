@@ -1,5 +1,7 @@
-import Map, { MapboxEvent, Marker, NavigationControl } from 'react-map-gl';
+import { useState } from 'react';
+import Map, { Marker, NavigationControl } from 'react-map-gl';
 import GeocoderControl from '../../components/GeocoderControl';
+import InfoBox from '../../components/InfoBox';
 import { MAPBOX_STYLES } from '../../constants/constant';
 import { enviroment } from '../../environment/env';
 import './index.less';
@@ -17,8 +19,11 @@ const geoJsonData = [
 
 export const MapComp = (props: any) => {
   const { mapBoxToken } = enviroment;
-  const markerOnClick = (event: MapboxEvent<MouseEvent>) => {
-    console.log('clicked');
+  const [popupInfo, setPopupInfo] = useState<any>(null);
+
+  const markerOnClick = (event: any, selectedLocation: any) => {
+    event.originalEvent.stopPropagation();
+    setPopupInfo(selectedLocation);
   };
 
   return (
@@ -32,17 +37,28 @@ export const MapComp = (props: any) => {
         }}
         mapStyle={MAPBOX_STYLES.outdoors}
       >
-        {geoJsonData.map((item) => (
-          <Marker
-            key={`${item.latitude}-${item.longitude}`}
-            latitude={item.latitude}
-            longitude={item.longitude}
-            anchor="bottom"
-            onClick={markerOnClick}
-          />
-        ))}
+        {geoJsonData.map((item, index) => {
+          const { latitude, longitude } = item;
+          return (
+            <Marker
+              key={`${index}-${latitude}-${longitude}`}
+              style={{ cursor: 'pointer' }}
+              anchor="bottom"
+              latitude={latitude}
+              longitude={longitude}
+              onClick={(e: any) => {
+                markerOnClick(e, item);
+              }}
+            />
+          );
+        })}
 
-        <GeocoderControl mapboxAccessToken={mapBoxToken} />
+        {popupInfo && <InfoBox popupInfo={popupInfo} onClose={setPopupInfo} />}
+
+        <GeocoderControl
+          mapboxAccessToken={mapBoxToken}
+          onClick={markerOnClick}
+        />
 
         <NavigationControl />
       </Map>
