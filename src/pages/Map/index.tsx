@@ -1,5 +1,4 @@
 import Map, { MapboxEvent, Marker, NavigationControl } from 'react-map-gl';
-import Pin from '../../assets/Pin';
 import GeocoderControl from '../../components/GeocoderControl';
 import { MAPBOX_STYLES } from '../../constants/constant';
 import { enviroment } from '../../environment/env';
@@ -40,9 +39,7 @@ export const MapComp = (props: any) => {
             longitude={item.longitude}
             anchor="bottom"
             onClick={markerOnClick}
-          >
-            <Pin size={20} />
-          </Marker>
+          />
         ))}
 
         <GeocoderControl mapboxAccessToken={mapBoxToken} />
