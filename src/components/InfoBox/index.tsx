@@ -12,6 +12,7 @@ function InfoBox(props: any) {
         longitude={Number(longitude)}
         latitude={Number(latitude)}
         onClose={() => onClose(null)}
+        focusAfterOpen={false}
       >
         <h3>its in popup</h3>
         <div>{`${longitude} | ${latitude}`}</div>

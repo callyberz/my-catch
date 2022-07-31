@@ -46,6 +46,14 @@ export default function GeocoderControl(props: any) {
               {...props.marker}
               longitude={location[0]}
               latitude={location[1]}
+              style={{ cursor: 'pointer' }}
+              onClick={(e: any) => {
+                const pinned = {
+                  longitude: e.target?._lngLat?.lng || 0,
+                  latitude: e.target?._lngLat?.lat || 0
+                };
+                props.onClick(e, pinned);
+              }}
             />
           );
         } else {
