@@ -47,10 +47,11 @@ export default function GeocoderControl(props: any) {
               longitude={location[0]}
               latitude={location[1]}
               style={{ cursor: 'pointer' }}
-              onClick={(e: any) => {
+              onClick={(e) => {
                 const pinned = {
-                  longitude: e.target?._lngLat?.lng || 0,
-                  latitude: e.target?._lngLat?.lat || 0
+                  longitude: result?.center[0],
+                  latitude: result?.center[1],
+                  name: result?.text || ''
                 };
                 props.onClick(e, pinned);
               }}

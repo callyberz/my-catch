@@ -1,25 +1,33 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Map, { Marker, NavigationControl } from 'react-map-gl';
 import GeocoderControl from '../../components/GeocoderControl';
 import InfoBox from '../../components/InfoBox';
 import { MAPBOX_STYLES } from '../../constants/constant';
 import { enviroment } from '../../environment/env';
+import { dataResp, lnglat } from './type';
 import './index.less';
 
-const geoJsonData = [
-  {
-    longitude: 114.1694,
-    latitude: 22.3193
-  },
-  {
-    longitude: 114.1694,
-    latitude: 22.4193
-  }
-];
+const API_DOMAIN = 'https://api.airtable.com/v0/';
 
 export const MapComp = (props: any) => {
-  const { mapBoxToken } = enviroment;
+  const { mapBoxToken, airTableAPIKey } = enviroment;
   const [popupInfo, setPopupInfo] = useState<any>(null);
+  const [geoJsonData, setGeoJsonData] = useState<lnglat[]>([]);
+
+  const fetchLocation = async () => {
+    const data = await fetch(
+      `${API_DOMAIN}app5O417XDRvX4a6U/favorites?api_key=${airTableAPIKey}`
+    );
+    const { records } = (await data.json()) as dataResp;
+    const lnglatList = records
+      .filter((i) => Object.keys(i.fields).length !== 0)
+      .map((i) => i.fields);
+    setGeoJsonData(lnglatList);
+  };
+
+  useEffect(() => {
+    fetchLocation();
+  }, []);
 
   const markerOnClick = (event: any, selectedLocation: any) => {
     event.originalEvent.stopPropagation();

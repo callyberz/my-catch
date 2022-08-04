@@ -3,7 +3,7 @@ import { Popup } from 'react-map-gl';
 
 function InfoBox(props: any) {
   const { popupInfo, onClose } = props || {};
-  const { longitude, latitude } = popupInfo || {};
+  const { longitude, latitude, name } = popupInfo || {};
 
   return (
     <div className="infobox-con">
@@ -14,7 +14,7 @@ function InfoBox(props: any) {
         onClose={() => onClose(null)}
         focusAfterOpen={false}
       >
-        <h3>its in popup</h3>
+        <h3>{name}</h3>
         <div>{`${longitude} | ${latitude}`}</div>
       </Popup>
     </div>
